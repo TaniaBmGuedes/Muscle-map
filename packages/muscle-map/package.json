@@ -1,6 +1,6 @@
 {
-  "name": "@fitgram/muscle-map",
-  "version": "0.1.1",
+  "name": "react-native-muscle-map",
+  "version": "0.1.2",
   "description": "Muscle heatmap for React Native — turns a workout's exercises into a colour-coded body map.",
   "main": "./lib/commonjs/index.js",
   "module": "./lib/module/index.js",

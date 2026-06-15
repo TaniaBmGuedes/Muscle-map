@@ -1,4 +1,4 @@
-# @fitgram/muscle-map
+# react-native-muscle-map
 
 Muscle heatmap for React Native. Give it a workout's exercises and it draws
 front + back body silhouettes with each muscle coloured by how much it's worked.
@@ -8,7 +8,7 @@ Built on top of [`react-native-body-highlighter`](https://github.com/HichamELBSI
 ## Install
 
 ```sh
-npm install @fitgram/muscle-map react-native-body-highlighter react-native-svg
+npm install react-native-muscle-map react-native-body-highlighter react-native-svg
 ```
 
 `react`, `react-native`, `react-native-body-highlighter` and `react-native-svg`
@@ -17,7 +17,7 @@ are **peer dependencies** — install them in the host app.
 ## Usage
 
 ```tsx
-import { MuscleHeatmap, type HeatmapExercise } from "@fitgram/muscle-map";
+import { MuscleHeatmap, type HeatmapExercise } from "react-native-muscle-map";
 
 const exercises: HeatmapExercise[] = [
   {
@@ -48,7 +48,7 @@ export function Screen() {
 ### Lower-level helpers
 
 ```ts
-import { computeBodyData, resolveSlugs, MUSCLE_TO_SLUGS } from "@fitgram/muscle-map";
+import { computeBodyData, resolveSlugs, MUSCLE_TO_SLUGS } from "react-native-muscle-map";
 ```
 
 `computeBodyData(exercises, levels?)` returns the `{ slug, intensity }[]` array

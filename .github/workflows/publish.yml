@@ -25,7 +25,6 @@ jobs:
         with:
           node-version: 20
           registry-url: "https://registry.npmjs.org"
-          scope: "@fitgram"
           cache: "npm"
 
       # Install the repo's dev tooling (react-native-builder-bob, typescript…).
