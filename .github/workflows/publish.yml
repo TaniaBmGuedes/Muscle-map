@@ -1,0 +1,46 @@
+name: Publish package
+
+# Publishes packages/muscle-map to the npm registry.
+# Consumers then install it with either `npm install` or `yarn add` — both
+# resolve from the same registry.
+#
+# Trigger: push a version tag (e.g. `git tag v0.1.1 && git push origin v0.1.1`)
+# or run manually from the Actions tab.
+on:
+  push:
+    tags:
+      - "v*.*.*"
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/muscle-map
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: "https://registry.npmjs.org"
+          scope: "@fitgram"
+          cache: "npm"
+
+      # Install the repo's dev tooling (react-native-builder-bob, typescript…).
+      - name: Install dependencies
+        run: npm ci
+        working-directory: .
+
+      - name: Build (commonjs + esm + types)
+        run: npm run build
+
+      - name: Publish to npm
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # To enable npm provenance (public repos only), add at job level:
+      #   permissions:
+      #     id-token: write
+      # and append `--provenance` to the publish command above.
