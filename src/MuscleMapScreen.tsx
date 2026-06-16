@@ -24,8 +24,11 @@ import {
 } from "./useExercises";
 import { FilterChip } from "./FilterChip";
 import { ExerciseCard } from "./ExerciseCard";
+import { MuscleExercisesSheet } from "./MuscleExercisesSheet";
+import { SAMPLE_EXERCISES } from "./sampleExercises";
 import { useI18n, type Lang } from "./i18n";
 import type { HeatmapExercise } from "./muscleBodyMap";
+import type { Slug } from "react-native-body-highlighter";
 
 const LEVELS = [1, 2, 3, 4, 5] as const;
 
@@ -59,6 +62,8 @@ export function MuscleMapScreen() {
   );
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
   const [gender, setGender] = useState<"male" | "female">("male");
+  // Muscle tapped on the heatmap → opens the "exercises for this muscle" sheet.
+  const [activeMuscle, setActiveMuscle] = useState<Slug | null>(null);
 
   const toggleTag = (tag: string) =>
     setTags((prev) =>
@@ -138,7 +143,12 @@ export function MuscleMapScreen() {
           className={`mt-2 gap-4 ${wide ? "flex-row items-start" : "flex-col items-stretch"}`}
         >
           <View className="flex-1 items-center">
-            <MuscleHeatmap exercises={workoutExercises} gender={gender} hideLegend />
+            <MuscleHeatmap
+              exercises={workoutExercises}
+              gender={gender}
+              hideLegend
+              onMusclePress={setActiveMuscle}
+            />
             <View className="mt-2 flex-row items-center justify-center gap-1">
               <Text className="mx-1.5 text-[12px] text-[#6B7280]">
                 {t("legend.less")}
@@ -174,6 +184,12 @@ export function MuscleMapScreen() {
               <Text className="text-[13px] font-bold text-[#6B7280]">2.</Text>
               <Text className="flex-1 text-[13px] leading-[18px] text-[#4B5563]">
                 {t("howto.step2")}
+              </Text>
+            </View>
+            <View className="mb-2 flex-row gap-1.5">
+              <Text className="text-[13px] font-bold text-[#6B7280]">3.</Text>
+              <Text className="flex-1 text-[13px] leading-[18px] text-[#4B5563]">
+                {t("howto.step3")}
               </Text>
             </View>
 
@@ -396,6 +412,16 @@ export function MuscleMapScreen() {
           </Pressable>
         </View>
       </ScrollView>
+
+      <MuscleExercisesSheet
+        slug={activeMuscle}
+        source={SAMPLE_EXERCISES}
+        selected={selected}
+        favorites={favorites}
+        onToggle={toggle}
+        onFavorite={toggleFavorite}
+        onClose={() => setActiveMuscle(null)}
+      />
     </SafeAreaView>
   );
 }

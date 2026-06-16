@@ -116,3 +116,43 @@ export function computeBodyData(exercises: HeatmapExercise[]): BodyDatum[] {
     intensity: Math.max(1, Math.round((score / max) * INTENSITY_LEVELS)),
   }));
 }
+
+/** The muscle fields any exercise-like record needs for the reverse lookup. */
+export type WithMuscles = {
+  primaryMuscles: string[];
+  secondaryMuscles: string[];
+  /** Coarse fallback, used only when primary & secondary resolve to nothing. */
+  muscleGroups?: string[];
+};
+
+/** Whether any of `names` resolves to the given body slug. */
+function namesHitSlug(names: string[] | undefined, slug: Slug): boolean {
+  return resolveSlugs(names).includes(slug);
+}
+
+/**
+ * Reverse of computeBodyData: given a tapped body slug, split a list of
+ * exercises into the ones that work it as a *primary* mover and the ones that
+ * only *assist* it. Mirrors computeBodyData's fallback — when an exercise has no
+ * detailed primary/secondary muscles, its coarse muscleGroups count as primary.
+ * An exercise that is already primary is never also listed as secondary.
+ */
+export function exercisesForSlug<T extends WithMuscles>(
+  slug: Slug,
+  exercises: T[]
+): { primary: T[]; secondary: T[] } {
+  const primary: T[] = [];
+  const secondary: T[] = [];
+
+  for (const ex of exercises) {
+    const hasDetail =
+      resolveSlugs(ex.primaryMuscles).length > 0 ||
+      resolveSlugs(ex.secondaryMuscles).length > 0;
+    const primaryNames = hasDetail ? ex.primaryMuscles : ex.muscleGroups;
+
+    if (namesHitSlug(primaryNames, slug)) primary.push(ex);
+    else if (hasDetail && namesHitSlug(ex.secondaryMuscles, slug)) secondary.push(ex);
+  }
+
+  return { primary, secondary };
+}

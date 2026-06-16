@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet } from "react-native";
-import Body from "react-native-body-highlighter";
+import Body, { type Slug } from "react-native-body-highlighter";
 import {
   computeBodyData,
   INTENSITY_LEVELS,
@@ -31,6 +31,8 @@ type Props = {
   gender?: "male" | "female";
   /** Hide the built-in "Menos → Mais" scale (when shown elsewhere). */
   hideLegend?: boolean;
+  /** Fired when a muscle is tapped, with its body-highlighter slug. */
+  onMusclePress?: (slug: Slug) => void;
 };
 
 export function MuscleHeatmap({
@@ -38,8 +40,14 @@ export function MuscleHeatmap({
   scale = 0.9,
   gender = "male",
   hideLegend = false,
+  onMusclePress,
 }: Props) {
   const data = computeBodyData(exercises);
+
+  // Body fires onBodyPartPress for any region; forward only ones with a slug.
+  const handlePress = onMusclePress
+    ? (part: { slug?: Slug }) => part.slug && onMusclePress(part.slug)
+    : undefined;
 
   return (
     <View>
@@ -50,6 +58,7 @@ export function MuscleHeatmap({
           gender={gender}
           scale={scale}
           colors={HEATMAP_COLORS}
+          onBodyPartPress={handlePress}
         />
         <Body
           data={data}
@@ -57,6 +66,7 @@ export function MuscleHeatmap({
           gender={gender}
           scale={scale}
           colors={HEATMAP_COLORS}
+          onBodyPartPress={handlePress}
         />
       </View>
 
