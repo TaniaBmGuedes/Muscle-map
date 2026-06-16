@@ -20,7 +20,4 @@
   ▎ if you want to drive the rendering yourself.
   ▎ - Configurable gender silhouette, color ramp, scale, and labels
   ▎ (localizable).
-  ▎
-  ▎ Built on top of react-native-body-highlighter and packaged with
-  ▎ react-native-builder-bob (CommonJS, ESM, and TypeScript types). The repo
-  ▎ also contains an Expo demo app that uses the library.
+
